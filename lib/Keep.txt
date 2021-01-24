@@ -1,0 +1,589 @@
+-----------------------------To-Do--------------------------------------------
+
+Get Sylenth Soundbanks from old HDD
+some key idk maybe office/windows or summat
+XQNVK-8JYDB-WJ9W3-YJ8YR-WFG99
+
+------------------------------Flutter-Stuff-----------------------------------
+Gradle build failed issue solution:
+Go to:
+%Project_Name%/Android/gradle/wrapper/gradle-wrapper.properties
+and change:
+distributionUrl=https\://services.gradle.org/distributions/gradle-6.3-bin.zip
+
+to use a function of a stateful widget in the state class, use: widget.functionName()
+
+if assigning function to onTap doesn't work try anonymous function:
+onTap:() => selectCategory(context)
+
+we use var when we initialize with a value. Since its type is already known, we need not specify it.
+------------------------------------------------------------------------------
+ic_launcher.png sizes:
+72x72
+48x48
+96x96
+144x144
+192x192
+
+String Interpolation: 
+${variable},
+
+To Explicitly get packages: flutter packages get
+------------------------------------------------------------------------------
+Interesting Widgets:
+AnimatedList() - to prevent list items from popping in & out of view and instead provide animations.
+AlertDialog() - Dialog Box with card properties like elevation etc.
+ListWheelScrollView(),
+LimitedBox() - gives size constraints to child widget when parent is unbounded.
+that drop down widget used for FAQ section in DA app: Expansion Panel
+------------------------------------------------------------------------------
+In case of text overflow:
+Text(
+  "This is a long text",
+  softWrap: true,
+  overflow: TextOverflow.ellipsis,
+),
+alternatively, try putting the childmost text widget in Expanded(). If not, keep going upward towards your row or column.
+https://stackoverflow.com/questions/44579918/flutter-wrap-text-on-overflow-like-insert-ellipsis-or-fade
+------------------------------------------------------------------------------
+To make raised button stretch to parent width:
+Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: RaisedButton(
+                      onPressed: () {},
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      color: Color(0xFF31393C),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                            'Confirm Donation',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 21.0,
+                              color: Color(0xFFFEFF99)
+                            )
+                          ),
+                        ),
+                      )
+                    ),
+                  ),
+
+----------------------------------------------------------------------
+When using a Drawer and you get an annoying grey colored notification bar instead of your DrawerHeader color,
+Its probably because you have a ListView() as your Drawer child instead of a Column(). Just use a Column.
+or
+wrap your Drawer in a MediaQuery.removePadding, giving it context and removeTop: true.
+
+Widget build(BuildContext context) {
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: Drawer(
+        child: ListView(
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+              ),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  'Meals App',
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            buildListTile(
+              passedContext: context,
+              passedTitle: 'Meals',
+              passedIcon: Icons.restaurant,
+            ),
+            buildListTile(
+              passedContext: context,
+              passedTitle: 'Preferences',
+              passedIcon: Icons.settings,
+            ),
+            buildListTile(
+              passedContext: context,
+              passedTitle: 'About',
+              passedIcon: Icons.help,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+----------------------------------------------------------------------
+For Clipping Images to fit in a widget like rounded corner card, use:
+ClipRRect(
+        borderRadius: BorderRadius.only(
+        	topLeft: Radius.circular(10.0),
+	        topRight: Radius.circular(10.0),
+        ),
+	child: Image.network(
+                mealImgUrl,
+                height: 200,
+                width: double.infinity,
+        	fit: BoxFit.cover,
+	),
+),
+Alternatively, you can set "clipBehaviour: Clip.antiAlias," in the Card() widget.
+----------------------------------------------------------------------
+Stack container is defined by its biggest child.
+use Positioned() and Align() widgets to align children widgets to relative positions.
+----------------------------------------------------------------------
+For Date Formatting:
+import 'package:intl/intl.dart';
+then format it like so:
+//where <this is the variable>
+DateFormat().format(<eachTx.txClassDate>)
+example:
+DateFormat('EEEE, d MMM yyyy').format(_selectedDate)
+----------------------------------------------------------------------
+Use Hex Color:
+color: Color(0xFFFD0100),
+----------------------------------------------------------------------
+Some Theming Stuff:
+Theme.of(context).primaryColor,
+MediaQuery.of(context).secondaryColor,
+
+final myScaleFactor = MediaQuery.of(context).textScaleFactor;
+Text(
+	"Text with device font scale option",
+	style: TextStyle(fontSize: 18 * myScaleFactor,),
+),
+----------------------------------------------------------------------
+Adding Images:
+Image.asset(src),
+or
+Image.network(src),
+----------------------------------------------------------------------
+MediaQuery.of(context).size.width //to get the device width
+----------------------------------------------------------------------
+Constructor with named parameters:
+class CategoryMealsScreen extends StatelessWidget {
+
+  final String categoryId;
+  final String categoryTitle;
+
+  CategoryMealsScreen({this.categoryId, this.categoryTitle});
+  //{} for named, positional without these brackets
+}
+
+*Sometimes we use a const constructor so that we can create immutable values such as Lists in DUMMY_DATA.dart from the Meals App.
+----------------------------------------------------------------------
+Navigator push MaterialPageRoute builder
+simpler method, pass arguments like passing to constructor.
+
+Navigator.of(passedContext).push(
+      MaterialPageRoute(
+        builder: (_) {
+          return CategoryMealsScreen(
+            catMealsScreenId: catItemId,
+            catMealsScreenTitle: catItemTitle,
+            catMealsScreenColor: catItemColor, 
+          );
+        },
+      ),
+    );
+----------------------------------------------------------------------
+Navigator pushNamed and routes
+
+first, in your MaterialApp(title:...,home:...), give routes like so:
+routes: {
+        '/categorymealsscreen': (ctx) => CategoryMealsScreen(),
+      }
+
+Now use that named route using .pushNamed and pass args in "arguments:{}" Map:
+
+Navigator.of(passedContext).pushNamed(
+      '/categorymealsscreen',
+      arguments: {
+        'catMealsScreenId': catItemId,
+        'catMealsScreenTitle': catItemTitle,
+        'catMealsScreenColor': catItemColor
+      },
+    );
+
+Now on that destination page (page you navigate to) in the Widget build function get the arguments and store them in variables like so:
+
+final routeArgs = ModalRoute.of(context).settings.arguments as Map;
+
+    final catMealsScreenId = routeArgs['catMealsScreenId'];
+    final String catMealsScreenTitle = routeArgs['catMealsScreenTitle'];
+    final Color catMealsScreenColor = routeArgs['catMealsScreenColor'];
+
+
+for bigger apps this method is easier to manage with a clear list of routes in the main file.
+----------------------------------------------------------------------
+onGenerateRoute takes a function which executes for any named navigation action like pushNamed() for which no registered route was found in the routes table.
+
+it can also be used to see the settings.arguments.
+
+You should return a navigation action i.e. MaterialPageRoute in onGenerateRoute.
+
+onGenerateRoute executes for any unregistered named route, onUnknownRoute executes if onGenerateRoute isn't defined or doesn't return a valid navigation action.
+----------------------------------------------------------------------
+For passing data on pop, give arguments on Navigator.of(context).pop(...)
+use the .then() function:
+Navigator.of(context).pushNamed(...routeName, arguments:...).then((passedData){print(passedData);});
+.then() runs after that page has been popped NOT after it has been pushed on the stack like it seems and how it is written.
+Note that this passed data won't be returned when pressing the back arrow icon on appbar or system navbar back button. In those cases, null will be passed so check for not null.
+Also, if you're changing what is being displayed after this operation, you will need a stateful widget.
+----------------------------------------------------------------------
+To add a Top Style TabBar (Top Tabs - Shuttle+/Whatsapp Style):
+----------------------------------------------------------------------
+First Create a Widget TabsScreen() which returns a DefaultTabController with a Scaffold as the child. Also give length property.
+Give it a TabBar() as the bottom property of AppBar() and the tabs property will be a list of Tab() Widgets, as many as specfied in the length property.
+Next, for the body property it will have a TabBarView() with its children as the screens you want to show on navigating the tabs.
+Finally, make this screen your home screen or equivalent.
+
+class TabsScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Meals App'),
+          bottom: TabBar(
+            tabs: <Widget> [
+              Tab(
+                // icon: Icon(Icons.category),
+                // text: 'Categories',
+                child: Row(
+                  children: <Widget> [
+                    Icon(Icons.category),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'Categories',
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Tab(
+                child: Row(
+                  children: <Widget> [
+                    Icon(Icons.star),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'Favorites',
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )
+        ),
+        body: TabBarView(
+          children: <Widget> [
+            CategoriesScreen(),
+            FavoritesScreen(),
+          ]
+        ),
+      ),
+    );
+  }
+}
+Check Events.dart of the DA app for alternate appearance and using it with a SliverAppBar().
+----------------------------------------------------------------------
+To add a Bottom Style Tab Bar - BottomNavigationBar() (Bottom Tabs - YouTube Style),
+----------------------------------------------------------------------
+First Create a Widget TabsScreen() which returns a Scaffold.
+Next, give the Scaffold a bottomNavigationBar property as the BottomNavigationBar() widget and set the items property as a List of BottomNavigationBarItem(icon:..., label:'...').
+
+Now create a List of Maps in your _TabsScreenState class which will have the corresponding page widget, title, as well as any action widgets to show on the AppBar only for specific screen (Like the + IconButton used in this example). It is called _pageData.
+
+Also create int _selectedPageIndex = 0 which denotes the currently selected page.
+
+Now, for the body property in the Scaffold use: 
+body: _pageData[_selectedPageIndex]['page'],
+
+Set the currentIndex property of BottomNavigationBar as _selectedPageIndex so that those icons and labels will change color on tap (become selected).
+
+Now we manually set the ontap functionality. Create function _selectPage() which receives the int tabItemSelected. This integer is received by it automatically. In this function we call setState wherein we set the _selectedPageIndex = tabItemSelected. So based on which BottomNavigationBarItem is tapped, that index int is passed to this function which rebuilds the screen and sets the currently selected page.
+Set the onTap property of the BottomNavigationBar as _selectPage to trigger it on tap of any botnavbaritem.
+
+Next Set the styling and type options to your liking using the BottomNavigationBar properties and then to make the AppBar reflect the change in title, set title: Text(_pageData[_selectedPageIndex]['title']),
+If there are any page specific widgets on the Appbar you want to show then set actions: _pageData[_selectedPageIndex]['actions'],
+
+Finally, make this screen your home screen or equivalent.
+
+class TabsScreen extends StatefulWidget {
+  @override
+  _TabsScreenState createState() => _TabsScreenState();
+}
+
+class _TabsScreenState extends State<TabsScreen> {
+
+  final List<Map<String, Object>> _pageData = [
+    {
+      'page': CategoriesScreen(),
+     'title': 'Categories',
+    },
+    {
+      'page': FavoritesScreen(),
+      'title': 'Favorites',
+      'actions': <Widget> [
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {}
+        ),
+      ],
+    },
+  ];
+  int _selectedPageIndex = 0;
+
+  //index is passed automatically to this function
+  void _selectPage(int tabItemSelected) {
+    setState(() {
+      _selectedPageIndex = tabItemSelected;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(_pageData[_selectedPageIndex]['title']),
+          actions: _pageData[_selectedPageIndex]['actions'],
+        ),
+        body: _pageData[_selectedPageIndex]['page'],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedPageIndex,
+          onTap: _selectPage,
+          backgroundColor: Theme.of(context).primaryColor,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.grey[300],
+          //type:BottomNavigationBarType.shifting,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.category),
+              label: 'Categories',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.star),
+              label: 'Favorites',
+            ),
+          ],
+        ),
+      );
+  }
+}
+----------------------------------------------------------------------
+Using Providers and Listeners, when the data in the provider changes, only the build method of the widget listening to the data provider reruns, thus improving performance instead of having to pass data through various widget constructors.
+
+Using Providers:
+add providers:^... dependency in pubspec.yaml
+
+create provider dart file and create a class with ChangeNotifier. 'with' implies mixin.
+class ProductsProvider with ChangeNotifier {
+  List<ProductModel> _items = [
+    //data...
+  ];
+
+  List<ProductModel> get items {
+    return [..._items];
+  }
+
+  void addProduct() {
+    //_items.add
+    notifyListeners();
+  }
+}
+
+we use a getter to get a copy of the items so that we can't change the items from anywhere else in the app, only inside the class using some changing function and in that function itself we use notifyListeners.
+If we were to not do this, and allowed changes from outside this class we could not call notifyListeners() so those listening would not get the updated copy and wouldn't rebuild correctly.
+
+
+then in the widget which is a parent to the widgets requiring this shared data, such as MaterialApp in the example, make the following changes.
+make the imports:
+import 'package:provider/provider.dart';
+import './providers/products_provider.dart';
+
+return ChangeNotifierProvider and in the create property give the name of the class in the provider dart file.
+Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => ProductsProvider(),
+      child: MaterialApp(
+        title: 'My Shop',
+        theme: ThemeData(
+          primaryColor: Colors.blue,
+        ),
+        routes: {
+          '/': (context) => ProductOverviewScreen(),
+          ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
+        },
+      ),
+    );
+  }
+
+Now use the data wherever you want by making the 2 imports and then using:
+final loadedProducts = Provider.of<ProductsProvider>(context).items;
+
+If you for some reason do not want the current widget to update on changes then set listen property to false as follows:
+final productToDisplay = Provider.of<ProductsProvider>(
+  context,
+  listen: false,
+).findById(passedProductId);
+
+here findById is a custom method created in the ProductsProvider() class as follows:
+ProductModel findById(String idToCheck) {
+    return _items.firstWhere((eachProd) => eachProd.prodModId == idToCheck);
+  }
+
+The nested providers thing and toggle favorite:
+Here in List of Products widget, instead of passed individual data through constructors, we made the foll changes:
+itemBuilder: (context, prodIndex) => ChangeNotifierProvider(
+  create: (context) => loadedProducts[prodIndex],
+  child: ProductListItem(),
+}
+and then in ProductListItem(), we removed the constr stuff and added listener:
+final productData = Provider.of<ProductModel>(context);
+***yes of the ProductModel and not ProductsProvider.
+now everywhere where it used this.prodId, for eg, we replaced with productData.prodModId.
+
+To toggle the favorite status of a list item, we first moved the Model file into the providers folder,
+then gave it the mixin by: ProductModel with ChangeNotifier, and then created the function:
+void toggleFavoriteStatus() {
+  prodModIsFav = !prodModIsFav;
+  notifyListeners();
+}
+then we call the function we made in the model in the onPressed method of FlatButton:
+FlatButton.icon(
+  onPressed: () {
+    productData.toggleFavoriteStatus();
+  },
+  icon: Icon(
+    productData.prodModIsFav == true ? Icons.star : Icons.star_border,
+    color: Colors.amber,
+  ),
+  label: Text('Favorite'),
+),
+
+Widgets are recycled by flutter when you use them in a list or grid and a provider using a builder function will not work correctly when those items go off screen and then come back into view.
+To make sure that provider works even if data changes for the widget, and to fix the error of "you used data even after dispose()", make it into ChangeNotifierProvider.value
+in products_list.dart where we used second provider:
+itemBuilder: (context, prodIndex) => ChangeNotifierProvider.value(
+  value: loadedProducts[prodIndex],
+  child: ProductListItem(),
+),
+
+it is better to use the builder function when creating a new object based on a provider class.
+it is better to use the value method when re-using objects.
+ChangeNotifierProvider also automatically cleans up the provided data.
+
+Consumer can be used to rebuild only parts of the widget tree instead of rebuilding the entire tree.
+We wrapped our FlatButton.icon with this:
+Consumer<ProductModel>(
+  builder: (context, product, child) => FlatButton.icon(
+    onPressed: () => product.toggleFavoriteStatus(),
+    icon: Icon(
+      product.prodModIsFav == true ? Icons.star : Icons.star_border,
+      color: Colors.amber,
+    ),
+    label: Text('Favorite'),
+  ),
+),
+and then where we get productData, make listen: false, to get the rest of the non-changing data like title, imgUrl, etc.
+productData = Provider.of<ProductModel>(context, listen: false);
+
+this can also be achieved by outsourcing/splitting widgets like making the button in a different widget with a provider and so on.
+
+some child widget that never changes and is not dependent on the changing data, can be passed as the child argument. It doesn't rebuild/update.
+
+we mixin with ChangeNotifier class (built into flutter & enabled by importing material.dart) related to InheritedWidget which the Provider package uses behind the scenes and it is a widget which allows to establish behind the scenes communication tunnels with the help of the context object which we're getting in every widget.
+
+----------------------------------------------------------------------
+Theory Type
+----------------------------------------------------------------------
+Widget Lifecycle:
+Stateless Widgets:
+Constructor Function -> build()
+
+Stateful Widgets:
+Constructor -> initState() -> build() -> setState() -> didUpdateWidget() -> build() -> dispose()
+
+App Lifecycle:
+inactive - no user input
+paused - not visible to user, running in bg
+resumed - visible again
+suspending - about to be suspended(exited)
+*there can also be some hard exits like battery removed for eg.
+
+inside void initstate()
+WidgetsBinding.instance.addObserver(this);
+this tells flutter whenever lifecycle state changes, go to observer and call thhe didChangeAppLifecycleState method
+
+inside void dispose
+WidgetsBinding.instance.removeObserver(this);
+clear observer to avoid memory leaks when the state object should be removed.
+
+Keys:
+Used when its a stateful widget and the topmost item in a list or in situations where we have the strange behaviour that we get the wrong state attached to our element.
+
+Mostly used when there is a ListView with Stateful children widget.
+
+Keys only matter if we are working with stateful widgets because state objects are attached to the elements not the widgets.
+----------------------------------------------------------------------
+State is data which affects the UI and which might change over time.
+
+App-wide State - affects the entire app or significant parts of the app.
+Eg: isUserAuthenticated, Loaded Products needed in various screens.
+
+Local State - affects only a widget on its own.
+Eg: form input, displayLoadingSpinner or not.
+----------------------------------------------------------------------
+Dart Inheritance and Mixins:
+----------------------------------------------------------------------
+class Person extends Limbs with Agility {
+  String personName;
+  int personAge;
+  Person(this.personName, this.personAge); 
+  @override
+  void movement() {
+    print("Overridden movement function.");
+  }
+}
+class Limbs {
+  int numLimbs; 
+  void movement() {
+    print("Limbs are moving...");
+  }
+}
+mixin Agility {
+  int speed;  
+}
+void main(){
+  final myPerson = Person('Harshit', 18);
+  print('Name: ${myPerson.personName}\nAge: ${myPerson.personAge}');
+  myPerson.numLimbs = 4;
+  myPerson.speed = 10;
+  print('Num Limbs: ${myPerson.numLimbs}\nSpeed: ${myPerson.speed}');
+  myPerson.movement();
+}
+/**
+ * Core concept of inheritance is that the Person class can get all the functions and properties of the Limbs class and we can also override methods with @override and then defining it there again.
+ * with inheritance, you can always inherit from only one class, dart does not support multiple inheritance parents but we can have as many mixins as we want by adding commas. 
+ * The idea behind mixin is that you can share methods and properties with multiple classes but logically it has less of a strong connection.
+ * Agility is a class with utility functions which can be applied to any number of things so it is used as a mixin.
+ * Whereas number of limbs is more specific to persons hence it is used with classic inheritance using extends.
+ * myPerson here has a type of Person as well as Limbs.
+**/
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
