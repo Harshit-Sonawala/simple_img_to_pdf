@@ -15,6 +15,7 @@ class CustomButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
+      //try changing to onPressed: onTap, in case of error
       onPressed: () => onTap(),
       color: Theme.of(context).accentColor,
       child: Row(
