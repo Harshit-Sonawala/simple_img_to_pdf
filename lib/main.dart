@@ -6,10 +6,13 @@ import 'package:path_provider/path_provider.dart';
 //import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:open_file/open_file.dart';
+
+import 'recent_files_screen.dart';
+import 'confirm_screen.dart';
 import './customButton.dart';
 
 //todo:
-//remove spaces on pdf generation.
+//change save location.
 //fix deleteimg iconbutton causing improper page display.
 //after delete animation.
 //add page in between two pages.
@@ -18,6 +21,8 @@ import './customButton.dart';
 //rename files.
 
 //recent files screen: listviewbuilder(icon-title-date-no_pages).
+//permission handler
+//"sure you want to exit?" dialog box
 
 
 void main() => runApp(SimpleImgToPdf());
@@ -28,22 +33,26 @@ class SimpleImgToPdf extends StatelessWidget {
     return MaterialApp(
       title: 'Simple Images To Pdf',
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      //home: HomeScreen(),
       theme: ThemeData(
         primarySwatch: Colors.blue,
         fontFamily: 'ProductSans',
       ),
-      routes: {},
+      routes: {
+        '/': (context) => HomeScreen(),
+        ConfirmScreen.routeName: (context) => ConfirmScreen(),
+        //ScreenWidgetClass.routeNameString: (context) => ScreenWidgetClass(_dataToPass),
+      },
     );
   }
 }
 
-class HomePage extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int pageIndex = 0;
   File _latestImage;
@@ -124,15 +133,17 @@ class _HomePageState extends State<HomePage> {
       //   bytes: thisImageInstance.readAsBytesSync(),
       // );
       
-      var imageToPrint = pw.MemoryImage(imgList[i].readAsBytesSync());
+      var imageToPrint = pw.MemoryImage(imgList[i].readAsBytesSync(),);
 
       pdf.addPage(
         pw.Page(
-          build: (pw.Context context) => pw.Expanded(
-            child: pw.Expanded(
-              child: pw.Image(
-                imageToPrint,
-              ),
+          pageTheme: pw.PageTheme(
+            margin: const pw.EdgeInsets.all(0),
+          ),
+          build: (pw.Context context) => pw.Center(
+            child: pw.Image(
+              imageToPrint,
+              fit: pw.BoxFit.contain,
             ),
           ),
         ),
@@ -197,7 +208,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Start adding images...',
+                    'Add one or more images...',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.grey,
