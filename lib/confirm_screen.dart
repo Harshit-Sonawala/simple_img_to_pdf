@@ -68,6 +68,10 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
       appBar: AppBar(
         title: Text('Save PDF'),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){},
+        child: Icon(Icons.note_add),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -104,10 +108,11 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
               child: TextField(
                 controller: _docNameController,
                 decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.edit),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  hintText: lastSavedFilePath == null ? 'New Document $timeStamp.pdf' : lastSavedFilePath,
+                  labelText: lastSavedFilePath == null ? 'New Document $timeStamp.pdf' : lastSavedFilePath,
                 ),
               ),
             ),
@@ -145,7 +150,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                         child: Text(
                           "Save",
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 17,
                             color: Colors.white,
                           ),
                         ),
@@ -158,7 +163,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: RaisedButton(
                       onPressed: () {
-                        OpenFile.open(lastSavedFilePath);
+                        OpenFile.open('$lastSavedFilePath');
                       },
                       elevation: 3,
                       shape: RoundedRectangleBorder(
@@ -170,7 +175,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                         child: Text(
                           "Open",
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 17,
                             color: Colors.white,
                           ),
                         ),
@@ -208,9 +213,12 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     child: Card(
                       elevation: 3,
                       clipBehavior: Clip.antiAlias,
-                      child: Image.file(
-                        loadedImgList[index],
-                        fit: BoxFit.contain,
+                      child: Container(
+                        height: 500,
+                        child: Image.file(
+                          loadedImgList[index],
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   );

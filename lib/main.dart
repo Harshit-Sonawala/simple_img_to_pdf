@@ -5,18 +5,6 @@ import './imglist_provider.dart';
 import './confirm_screen.dart';
 import './customButton.dart';
 
-//todo:
-//change save location.
-//fix deleteimg iconbutton causing improper page display.
-//add page in between two pages.
-//cropping images
-//editing the order & delete all button.
-
-//recent files screen: listviewbuilder(icon-title-date-no_pages).
-//permission handler
-//"sure you want to exit?" dialog box
-
-
 void main() => runApp(SimpleImgToPdf());
 
 class SimpleImgToPdf extends StatelessWidget {
@@ -55,110 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
     keepPage: true,
   );
 
-  // Future getImageFromCamera() async {
-  //   final pickedFile = await imgpicker.getImage(
-  //     source: ImageSource.camera,
-  //   );
-  //   setState(() {
-  //     if (pickedFile != null) {
-  //       _latestImage = File(pickedFile.path);
-  //       imgList.add(_latestImage);
-  //     } else {
-  //       print('No image selected.');
-  //     }
-  //     if(imgList.length > 1) {
-  //       pageController.animateToPage(
-  //         imgList.length - 1,
-  //         duration: Duration(milliseconds: 500),
-  //         curve: Curves.ease,
-  //       );
-  //     }
-  //   });
-  // }
-
-  // Future getImageFromGallery() async {
-  //   final pickedFile = await imgpicker.getImage(
-  //     source: ImageSource.gallery,
-  //   );
-  //   setState(() {
-  //     if (pickedFile != null) {
-  //       _latestImage = File(pickedFile.path);
-  //       imgList.add(_latestImage);
-  //     } else {
-  //       print('No image selected.');
-  //     }
-  //     if(imgList.length > 1) {
-  //       pageController.animateToPage(
-  //         imgList.length - 1,
-  //         duration: Duration(milliseconds: 500),
-  //         curve: Curves.ease,
-  //       );
-  //     }
-  //   });
-  // }
-
-  // deleteImage() {
-  //   setState(() {
-  //     imgList.removeAt(pageIndex);
-  //     if (imgList.length == 0) {
-  //       _latestImage = null;
-  //     } else {
-  //       _latestImage = imgList[imgList.length-1];
-  //       pageController.animateToPage(
-  //         imgList.length-1,
-  //         duration: Duration(milliseconds: 500),
-  //         curve: Curves.ease,
-  //       );
-  //     }
-  //   });
-  // }
-
-  // void createPDF() async {
-  //   final pdf = pw.Document();
-  //   for (int i = 0; i < imgList.length; i++) {
-  //     //Uint8List imageData = File(thisImageInstance.toString()).readAsBytesSync();
-  //     //var imgBytes = await Image.file(imgList[i]).image.toByteData();
-      
-  //     // final imageToPrint = PdfImage.file(
-  //     //   pdf.document,
-  //     //   bytes: thisImageInstance.readAsBytesSync(),
-  //     // );
-      
-  //     var imageToPrint = pw.MemoryImage(imgList[i].readAsBytesSync(),);
-
-  //     pdf.addPage(
-  //       pw.Page(
-  //         pageTheme: pw.PageTheme(
-  //           margin: const pw.EdgeInsets.all(0),
-  //         ),
-  //         build: (pw.Context context) => pw.Center(
-  //           child: pw.Image(
-  //             imageToPrint,
-  //             fit: pw.BoxFit.contain,
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //   final outputDirectory = await getExternalStorageDirectory();
-  //   final timeStamp = DateTime.now().toString();
-  //   final file = File('${outputDirectory.path}/New Document $timeStamp.pdf');
-  //   print('Successfully Saved pdf to: ${outputDirectory.path}/New Document $timeStamp.pdf');
-  //   await file.writeAsBytes(await pdf.save());
-
-  //   _scaffoldKey.currentState.showSnackBar(
-  //     SnackBar(
-  //       content: Text('Saved pdf to: ${outputDirectory.path}/New Document $timeStamp.pdf'),
-  //       action: SnackBarAction(
-  //         label: 'View',
-  //         onPressed: () {
-  //           OpenFile.open('${outputDirectory.path}/New Document $timeStamp.pdf');
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
-
 //   class PdfPreviewScreen extends StatelessWidget {
 
 //   //Path del pdf 
@@ -177,9 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext scaffoldContext) {
-
     final loadedImgList = Provider.of<ImgListProvider>(context).imgList;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Simple Images to PDF'),
@@ -285,9 +167,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: CustomButton(
                 icon: Icons.add_a_photo,
                 label: 'Add from camera',
-                onTap: () {
+                onTap: () async {
+                  await Provider.of<ImgListProvider>(context, listen: false,).getImageFromCamera();
                   setState(() {
-                    Provider.of<ImgListProvider>(context, listen: false,).getImageFromCamera();
                     if(loadedImgList.length > 1) {
                       pageController.animateToPage(
                         loadedImgList.length - 1,
@@ -307,9 +189,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: CustomButton(
                 icon: Icons.wallpaper,
                 label: 'Add from gallery',
-                onTap: () {
+                onTap: () async{
+                  await Provider.of<ImgListProvider>(context, listen: false,).getImageFromGallery();
                   setState(() {
-                    Provider.of<ImgListProvider>(context, listen: false,).getImageFromGallery();
                     if(loadedImgList.length > 1) {
                       pageController.animateToPage(
                         loadedImgList.length - 1,
@@ -327,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
               child: CustomButton(
-                icon: Icons.navigate_next,
+                icon: Icons.double_arrow,
                 label: 'Continue',
                 //onTap: createPDF,
                 onTap: () {
