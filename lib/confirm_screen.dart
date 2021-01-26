@@ -79,7 +79,39 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                 color: Colors.white,
               ),
             ),
-            onPressed: (){},
+            onPressed: (){
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 3,
+                  title: Text(
+                    'Restart for a new file?',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  content: Text('You will lose unsaved changes'),
+                  actions: [
+                    FlatButton(
+                      child: Text('No'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    FlatButton(
+                      child: Text('Yes'),
+                      onPressed: () {
+                        Provider.of<ImgListProvider>(context, listen: false).clearAll();
+                        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
           )
         ],
       ),
@@ -205,7 +237,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5),
               child: Text(
-                'File Preview: ',
+                'File Preview:',
                 style: TextStyle(
                   fontSize: 18,
                   color: Theme.of(context).primaryColor,
@@ -226,7 +258,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                       elevation: 3,
                       clipBehavior: Clip.antiAlias,
                       child: Container(
-                        height: 500,
+                        height: 520,
                         child: Image.file(
                           loadedImgList[index],
                           fit: BoxFit.contain,

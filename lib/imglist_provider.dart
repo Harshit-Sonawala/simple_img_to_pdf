@@ -41,4 +41,9 @@ class ImgListProvider with ChangeNotifier {
       }
     notifyListeners();
   }
+
+  void clearAll() {
+    imgList.clear();
+    latestImage = null;
+  }
 }
