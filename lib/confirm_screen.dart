@@ -15,26 +15,20 @@ class ConfirmScreen extends StatefulWidget {
 class _ConfirmScreenState extends State<ConfirmScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final _docNameController = TextEditingController();
+  var _saved = false;
+
   @override
   Widget build(BuildContext context) {
 
     final loadedImgList = Provider.of<ImgListProvider>(context).imgList;
     final timeStamp = DateTime.now().toString();
+    String lastSavedFilePath;
 
-    void createPDF() async {
+    void createPDF(String fileName) async {
       final pdf = pw.Document();
       for (int i = 0; i < loadedImgList.length; i++) {
-        //ignore these other implementations.
-        //Uint8List imageData = File(thisImageInstance.toString()).readAsBytesSync();
-        //var imgBytes = await Image.file(imgList[i]).image.toByteData();
-        
-        // final imageToPrint = PdfImage.file(
-        //   pdf.document,
-        //   bytes: thisImageInstance.readAsBytesSync(),
-        // );
-        
         var imageToPrint = pw.MemoryImage(loadedImgList[i].readAsBytesSync(),);
-
         pdf.addPage(
           pw.Page(
             pageTheme: pw.PageTheme(
@@ -51,17 +45,18 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
       }
 
       final outputDirectory = await getExternalStorageDirectory();
-      final file = File('${outputDirectory.path}/New Document $timeStamp.pdf');
-      print('Successfully Saved pdf to: ${outputDirectory.path}/New Document $timeStamp.pdf');
+      final file = File('${outputDirectory.path}/$fileName');
+      print('Successfully Saved PDF to: ${outputDirectory.path}/$fileName');
       await file.writeAsBytes(await pdf.save());
+      lastSavedFilePath = '${outputDirectory.path}/$fileName';
 
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text('Saved pdf to: ${outputDirectory.path}/New Document $timeStamp.pdf'),
+          content: Text('Saved PDF to: ${outputDirectory.path}/$fileName'),
           action: SnackBarAction(
             label: 'View',
             onPressed: () {
-              OpenFile.open('${outputDirectory.path}/New Document $timeStamp.pdf');
+              OpenFile.open('${outputDirectory.path}/$fileName');
             },
           ),
         ),
@@ -78,101 +73,126 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Text(
+                'Save File As: ',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            ),
             SizedBox(
               height: 10,
             ),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Text(
+                'If not specified, it takes the timestamp as the name',
+                style: TextStyle(
+                  fontSize: 16,
+                  //color: Colors.grey,
                 ),
-                labelText: 'Rename File',
-                hintText: 'New Document $timeStamp.pdf',
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: TextField(
+                controller: _docNameController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  hintText: lastSavedFilePath == null ? 'New Document $timeStamp.pdf' : lastSavedFilePath,
+                ),
               ),
             ),
             SizedBox(
               height: 10,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Expanded(
-                  child: RaisedButton(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    onPressed: createPDF,
-                    color: Theme.of(context).primaryColor,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "Save",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: RaisedButton(
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          if (_docNameController.text.isEmpty) {
+                            createPDF('New Document $timeStamp.pdf');
+                          } else {
+                            if(_docNameController.text.length > 4 && _docNameController.text.substring(_docNameController.text.length-4) == '.pdf') {
+                              createPDF(_docNameController.text);
+                            } else {
+                              createPDF('${_docNameController.text}.pdf');
+                            }
+                          }
+                          _saved = true;
+                        });
+                      },
+                      color: Theme.of(context).primaryColor,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          "Save",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: RaisedButton(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    color: Theme.of(context).primaryColor,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "Cancel",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
+                _saved ? Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: RaisedButton(
+                      onPressed: () {
+                        OpenFile.open(lastSavedFilePath);
+                      },
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      color: Theme.of(context).primaryColor,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          "Open",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: RaisedButton(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    onPressed: () {},
-                    color: Theme.of(context).primaryColor,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "Open",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                )
+                : Container(),
               ],
             ),
             SizedBox(
               height: 10,
             ),
-            Text(
-              'File Preview: ',
-              style: TextStyle(
-                fontSize: 18,
-                color: Theme.of(context).primaryColor,
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Text(
+                'File Preview: ',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
             ),
             SizedBox(
