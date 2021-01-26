@@ -17,14 +17,14 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _docNameController = TextEditingController();
   var _saved = false;
+  String lastSavedFilePath;
 
   @override
   Widget build(BuildContext context) {
 
     final loadedImgList = Provider.of<ImgListProvider>(context).imgList;
     final timeStamp = DateTime.now().toString();
-    String lastSavedFilePath;
-
+    
     void createPDF(String fileName) async {
       final pdf = pw.Document();
       for (int i = 0; i < loadedImgList.length; i++) {
@@ -67,10 +67,21 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Save PDF'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){},
-        child: Icon(Icons.note_add),
+        actions: <Widget>[
+          FlatButton.icon(
+            icon: Icon(
+              Icons.note_add,
+              color: Colors.white,
+            ),
+            label: Text(
+              'New File',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            onPressed: (){},
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -163,7 +174,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: RaisedButton(
                       onPressed: () {
-                        OpenFile.open('$lastSavedFilePath');
+                        print(lastSavedFilePath);
+                        OpenFile.open(lastSavedFilePath);
                       },
                       elevation: 3,
                       shape: RoundedRectangleBorder(
