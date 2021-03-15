@@ -1,6 +1,6 @@
 # Simple Image to PDF
 
-An android app that allows to select one or more images and converts it into a single pdf file.
+An lightweight android app that allows to select one or more images and converts it into a single pdf file.
 
 A simple yet innovative user interface for using the device camera or picking images and converting it into a pdf, handy for creating notes or documents without having to worry about unnecessary watermarks or improper cropping of the images.
 
