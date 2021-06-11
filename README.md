@@ -7,12 +7,12 @@ A simple yet innovative user interface for using the device camera or picking im
 
 ### Screenshots: ###
 
-<img src="https://github.com/Harshit-Sonawala/simple_img_to_pdf/blob/master/screenshots/Img_to_pdf_ss1.png" width="640">
+<img src="https://github.com/Harshit-Sonawala/simple_img_to_pdf/blob/master/screenshots/Img_to_pdf_ss1.png" width="426">
 
-<img src="https://github.com/Harshit-Sonawala/simple_img_to_pdf/blob/master/screenshots/Img_to_pdf_ss2.png" width="640">
+<img src="https://github.com/Harshit-Sonawala/simple_img_to_pdf/blob/master/screenshots/Img_to_pdf_ss2.png" width="426">
 
-<img src="https://github.com/Harshit-Sonawala/simple_img_to_pdf/blob/master/screenshots/Img_to_pdf_ss3.png" width="640">
+<img src="https://github.com/Harshit-Sonawala/simple_img_to_pdf/blob/master/screenshots/Img_to_pdf_ss3.png" width="426">
 
-<img src="https://github.com/Harshit-Sonawala/simple_img_to_pdf/blob/master/screenshots/Img_to_pdf_ss4.png" width="640">
+<img src="https://github.com/Harshit-Sonawala/simple_img_to_pdf/blob/master/screenshots/Img_to_pdf_ss4.png" width="426">
 
-<img src="https://github.com/Harshit-Sonawala/simple_img_to_pdf/blob/master/screenshots/Img_to_pdf_ss5.png" width="640">
+<img src="https://github.com/Harshit-Sonawala/simple_img_to_pdf/blob/master/screenshots/Img_to_pdf_ss5.png" width="426">
