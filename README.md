@@ -5,6 +5,8 @@ Created using flutter and dart.
 
 A simple yet innovative user interface for using the device camera or picking images and converting it into a pdf, handy for creating notes or documents without having to worry about unnecessary watermarks or improper cropping of the images.
 
+Created as an attempt to practice Flutter and mobile app dev skills.
+
 ### Screenshots: ###
 
 <img src="https://github.com/Harshit-Sonawala/simple_img_to_pdf/blob/master/screenshots/Img_to_pdf_ss1.png" width="426">
